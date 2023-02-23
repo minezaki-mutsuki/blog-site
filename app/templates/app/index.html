@@ -11,7 +11,11 @@
       <div class="card-footer text-muted">
         {{post.created|date}} by {{post.author}}
       </div>
-      <a class="stretched-link" href=""></a>
+      <a
+        href="{% url 'post_detail' post.id %}"
+        class="stretched-link"
+        href=""
+      ></a>
     </div>
     {% endfor %}
   </div>

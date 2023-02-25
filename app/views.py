@@ -3,6 +3,9 @@ from django.views.generic import View
 from .models import Post, Category
 from .forms import PostForm
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db.models import Q
+from functools import reduce
+from operator import and_
 
 class IndexView(View):
     def get(self, request, *args, **kwargs):
@@ -93,3 +96,20 @@ class CategoryView(View):
             "post_data": post_data
         })
         
+class SearchView(View):
+    def get(self, request, *args, **kwargs):
+        post_data = Post.objects.order_by("-id")
+        keyword = request.GET.get("keyword")
+        if keyword:
+            exclution_list = set([" ", "　"])
+            query_list = ""
+            for word in keyword:
+                if not word in exclution_list:
+                    query_list += word
+            query = reduce(and_, [Q(title__icontains=q) | Q(content__icontains=q) for q in query_list])
+            post_data = post_data.filter(query)
+        return render(request, "app/index.html", {
+            "keyword": keyword,
+            "post_data": post_data
+        })
+            

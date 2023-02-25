@@ -14,3 +14,10 @@ body {
 main {
   flex: 1;
 }
+.card-auth {
+  width: 400px;
+  border: 0;
+}
+.card-title {
+  margin-bottom: 10px;
+}
